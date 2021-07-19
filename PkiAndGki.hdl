@@ -1,0 +1,32 @@
+/******************************************************************
+ *
+ * Used In Add16CLA4bit 
+ *
+ * Function : Higher level Propagate and 
+ *            generate terms
+ *
+ *****************************************************************/
+CHIP PkiAndGki
+{
+    IN Pi[16],Gi[16];
+    OUT Pki[4],Gki[4];
+
+    PARTS:
+
+    // P0i And G0i
+    And4to1(a=Pi[0], b=Pi[1], c=Pi[2], d=Pi[3], out=Pki[0]);
+    GenerateTerm(P=Pi[1..3], G=Gi[0..3], out=Gki[0]);
+
+    // P1i And G1i
+    And4to1(a=Pi[4], b=Pi[5], c=Pi[6], d=Pi[7], out=Pki[1]);
+    GenerateTerm(P=Pi[5..7], G=Gi[4..7], out=Gki[1]);
+
+    // P2i And G2i
+    And4to1(a=Pi[8], b=Pi[9], c=Pi[10], d=Pi[11], out=Pki[2]);
+    GenerateTerm(P=Pi[9..11], G=Gi[8..11], out=Gki[2]);
+
+    // P3i And G3i
+    And4to1(a=Pi[12], b=Pi[13], c=Pi[14], d=Pi[15], out=Pki[3]);
+    GenerateTerm(P=Pi[13..15], G=Gi[12..15], out=Gki[3]);
+
+}

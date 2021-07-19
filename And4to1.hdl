@@ -1,0 +1,18 @@
+/******************************************
+ *
+ * Function : out = a.b.c.d
+ *
+ ******************************************/
+
+CHIP And4to1
+{
+    IN a,b,c,d;
+    OUT out;
+
+    PARTS:
+
+    And(a=a, b=b, out=temp1);
+    And(a=c, b=d, out=temp2);
+    And(a=temp1, b=temp2, out=out);    
+
+}

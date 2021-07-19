@@ -1,0 +1,26 @@
+/*************************************************
+ *
+ * INPUT :
+ * x and y 16 bit numbers 
+ * oper : 0 for addition, 1 for subtraction
+ * unsigned : 1 for unsigned number else 0
+ *
+ * OUTPUT :
+ * out : result of operation
+ * oflow : overflow bit
+ *
+ *************************************************/
+CHIP Add16CLA4bit
+{
+    IN x[16],y[16],oper,unsigned;
+    OUT out[16],oflow;
+
+    PARTS:
+
+    Xor16with1(a=y, b=oper, out=ny);
+    PiGi(x=x, y=ny, Pi=Pi, Gi=Gi);
+    PkiAndGki(Pi=Pi, Gi=Gi, Pki=Pki, Gki= Gki);
+
+    CarryBits(Pi=Pi, Gi=Gi, Pki=Pki, Gki=Gki, c0=oper, ci=c, c16= c16);
+    SumAndOflow(Pi=Pi, c=c, c16=c16, unsigned=unsigned, out=out, oflow=oflow);
+}

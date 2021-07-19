@@ -1,0 +1,30 @@
+/***********************************************
+ *
+ * Used In Add16CLA4bit 
+ *
+ * Function :
+ * generates sum bits anf oflow bit
+ *
+ **********************************************/
+
+CHIP SumAndOflow
+{
+    IN Pi[16],c[16],c16,unsigned;
+    OUT out[16],oflow;
+
+    PARTS:
+
+    // sum bits s_i = (P_i) Xor (c_i) 
+    Xor16(a=Pi, b=c[0..15], out=out);
+
+    // oflow = unsigned.(c0 Xor c16) + signed.(c15 Xor 16)
+    // oflow for unsigned
+    Xor(a=c[0], b=c16, out=c0c16);
+    And(a=unsigned, b=c0c16, out=oflow1);
+
+    // oflow for signed
+    Xor(a=c[15], b=c16, out=c1516);
+    Not(in=unsigned,out=signed);
+    And(a=signed,b=c1516,out=oflow2);
+    Or(a=oflow1,b=oflow2,out=oflow);    
+}

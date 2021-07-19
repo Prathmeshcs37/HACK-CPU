@@ -1,0 +1,15 @@
+// Multiplexer 2 to 1 way
+// used in other Mux chips 
+
+CHIP Mux
+{
+    IN x0,x1,s;
+    OUT out;
+
+    PARTS:
+    
+    Not(in=s, out=nots);
+    And(a=nots, b=x0, out=t1);
+    And(a=s, b=x1, out=t2);
+    Or(a=t1, b=t2, out=out);
+}

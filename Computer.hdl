@@ -1,0 +1,32 @@
+/*************************************
+* The HACK computer, including CPU, ROM and RAM
+*
+*   Abstraction:A computer capable of running programs written in the Hack machine language
+*   Implementation : Built from the Hack chip-set.
+*
+*   Input: reset
+*   Function: When reset is 0, the program stored in the computer's
+*             ROM executes. When reset is 1, the execution of the
+*             program restarts. Thus, to start a program's
+*             execution, reset must be pushed "up" (1) and then "down" (0).
+*
+*   -------------         -----------           ----------
+*   |            | inst   |         |   out    |          |  
+*   |Instruction |--------|   CPU   |----------|   Data   |
+*   |   Memory   |        |         |          |  Memory  |     
+*   |            |--------|         |----------|          | 
+*   |____________|  addrs |_________|   in     |__________|
+*               
+*   
+*
+***************************************/
+CHIP Computer
+{
+    IN reset;
+
+    PARTS:
+    
+    ROM32K(address=pc, out=ins);
+    HackCPU(inM=inM, ins=ins, reset=reset, data=data,writeM=writeM,adds[0..13]=address,pc=pc);
+    RAM16K(in=data, load=writeM, address=address, out=inM);  
+}

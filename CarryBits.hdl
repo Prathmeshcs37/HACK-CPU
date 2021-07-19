@@ -1,0 +1,36 @@
+/**************************************************************************************
+ * 
+ * Used in Add16CLA4bit 
+ * 
+ * Function : generates all carry bits
+ * first c4, c8, c12, c16 is generated
+ * then other bits are generated
+ *
+ **************************************************************************************/
+CHIP CarryBits
+{
+    IN Pi[16],Gi[16],Pki[4],Gki[4],c0;
+    OUT ci[16],c16;
+
+    PARTS:
+
+    // Using Higher level terms 
+    // c4, c8, c12, c16
+    CarryGenerate(P=Pki, G=Gki, c0=c0, c1=c4, c2=c8, c3=c12, c4=c16);
+    
+    // using Pi and Gi
+    // c1, c2, c2
+    CarryGenerate(P=Pi[0..3], G=Gi[0..3], c0=c0, c1=ci[1], c2=ci[2], c3=ci[3]);
+    // c5, c6, c7
+    CarryGenerate(P=Pi[4..7], G=Gi[4..7], c0=c4, c1=ci[5], c2=ci[6], c3=ci[7]);
+    // c9, c10, c11
+    CarryGenerate(P=Pi[8..11], G=Gi[8..11], c0=c8, c1=ci[9], c2=ci[10], c3=ci[11]);
+    // c13, c14, c15
+    CarryGenerate(P=Pi[12..15], G=Gi[12..15], c0=c12, c1=ci[13], c2=ci[14], c3=ci[15]);
+
+    And(a=c0, b=c0, out=ci[0]);
+    And(a=c4, b=c4, out=ci[4]);
+    And(a=c8, b=c8, out=ci[8]);
+    And(a=c12, b=c12, out=ci[12]);
+
+}

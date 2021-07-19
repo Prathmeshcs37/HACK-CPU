@@ -1,0 +1,30 @@
+/*************************************
+*
+*
+* This chip gives output for operations performed
+* by hack ALU
+*        out[16], is 16-bit output
+*        zr, is 1 if (out == 0), 
+*               0 otherwise
+*        ng; is 1 if (out < 0),  
+*               0 otherwise
+*
+*
+*
+**************************************/
+CHIP Result
+{
+    IN in[16];
+    OUT zr,ng,out[16];
+
+    PARTS:
+
+    And(a=in[15], b=true, out=ng);
+    Or4to1(a=in[0], b=in[1], c=in[2], d=in[3], out=tmp1);
+    Or4to1(a=in[4], b=in[5], c=in[6], d=in[7], out=tmp2);
+    Or4to1(a=in[8], b=in[9], c=in[10], d=in[11], out=tmp3);
+    Or4to1(a=in[12], b=in[13], c=in[14], d=in[15], out=tmp4);
+    Or4to1(a=tmp1, b=tmp2, c=tmp3, d=tmp4, out=notzr);
+    Not(in=notzr, out=zr);
+    And16(a=in, b=true, out=out);
+}

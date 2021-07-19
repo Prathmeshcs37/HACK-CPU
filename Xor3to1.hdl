@@ -1,0 +1,17 @@
+/***************************
+*
+*   INPUT: 3 numbers a,b,c
+*   OUTPUT: out which gives xor 
+*           of a,b,c (the given triplets)
+*           
+****************************/
+CHIP Xor3to1
+{
+    IN a,b,c;
+    OUT out;
+
+    PARTS:
+
+    Xor(a=a, b=b, out=Xorab);
+    Xor(a=Xorab, b=c, out=out);
+}

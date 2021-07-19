@@ -1,0 +1,20 @@
+/*******************************************************
+ *
+ * Used in Pki And Gki 
+ *
+ * Function :
+ * out = P2.P1.P0.G0 + P2.P1.G1 + P2.G2 + G3
+ *
+ *******************************************************/
+CHIP GenerateTerm
+{
+    IN P[3],G[4];
+    OUT out;
+
+    PARTS:
+    And4to1(a=P[0], b=P[1], c=P[2], d=G[0], out=t1);
+    And4to1(a=P[1], b=P[2], c=true, d=G[1], out=t2);
+    And4to1(a=P[2], b=true, c=true, d=G[2], out=t3);
+    And4to1(a=true, b=true, c=true, d=G[3], out=t4);
+    Or4to1(a=t1, b=t2, c=t3, d=t4, out=out);
+}

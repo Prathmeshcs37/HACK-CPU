@@ -1,0 +1,31 @@
+/**********************************
+*
+*   The Hack ALU computes a fixed set of functions out=f(x,y) 
+*   where x and y are the chip’s two 16-bit inputs, out is the 
+*   chip’s 16-bit output, and f is an arithmetic or logical function 
+*   selected from a fixed repertoire of eighteen possible functions.
+*
+*   We instruct the ALU which function to compute by setting six input 
+*   bits, called control to selected binary values(here zx,zy,nx,ny,f,n0).
+*
+*
+*********************************/
+CHIP HackALU
+{
+    IN x[16],y[16],zx,zy,nx,ny,f,n0;
+    OUT out[16],zr,ng;
+
+    PARTS:
+
+    Mux16(a=x, b=false, s=zx, out=tmpx1);
+    Mux16(a=y, b=false, s=zy, out=tmpy1);
+    Xor16with1(a=tmpx1, b=nx, out=tmpx2);
+    Xor16with1(a=tmpy1, b=ny, out=tmpy2);
+    Add16CLA4bit(x=tmpx2, y=tmpy2, oper=false, unsigned=false, out=sum);
+    And16(a=tmpx2, b=tmpy2, out=and);
+    Mux16(b=sum, a=and, s=f, out= tmp);
+    Xor16with1(a=tmp, b=n0, out=tmpout);
+
+    //zr, ng, out
+    Result(in=tmpout, zr=zr, ng=ng, out=out);
+}

@@ -1,0 +1,44 @@
+/*****************
+*
+*   The jump instruction transfers the program sequence
+*   to the memory address given in the operand based on the 
+*   specified flag. 
+*
+*
+*******************/
+CHIP Jump
+{
+    IN j1,j2,j3,zr,ng;
+    OUT jump;
+
+    PARTS:
+
+    Not(in=j1, out=notj1);
+    Not(in=j2, out=notj2);
+    Not(in=j3, out=notj3);
+    Not(in=zr, out=notzr);
+    Not(in=ng, out=notng);
+    // j1 j2  j3 zr ng
+    // 0   0   1  0  0
+    And4to1(a=notj1, b=notj2, c=j3, d=notzr, out=t1);
+    And(a=t1, b=notng, out=jt1);
+    // 0   1   0  1
+    And4to1(a=notj1, b=j2, c=notj3, d=zr, out=jt2);
+    // 0   1   1  1  0
+    And4to1(a=notj1, b=j2, c=j3, d=zr, out=t2);
+    And(a=t2, b=notng, out=jt3);
+    // 1   0   0  0  1
+    And4to1(a=j1, b=notj2, c=notj3, d=notzr, out=t3);
+    And(a=t3, b=ng, out=jt4);
+    // 1   0   1  0
+    And4to1(a=j1, b=notj2, c=j3, d=notzr, out=jt5);
+    // 1   1   0  1  1
+    And4to1(a=j1, b=j2, c=notj3, d=zr, out=t4);
+    And(a=t4, b=ng, out=jt6);
+    // 1   1   1
+    And4to1(a=j1, b=j2, c=j3, d=true, out=jt7);
+
+    Or4to1(a=jt1, b=jt2, c=jt3, d=jt4, out=jf1);
+    Or4to1(a=jt5, b=jt6, c=jt7, d=false, out=jf2);
+    Or(a=jf1, b=jf2, out=jump);
+}

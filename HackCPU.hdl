@@ -1,0 +1,64 @@
+/**********************************
+*
+*   CHIP: 
+*   The Hack CPU consists of the ALU and three registers 
+*   called data register (D), address register (A), and program 
+*   counter (PC). While the D-register is used solely for storing 
+*   data values, the A-register serves three different purposes, 
+*   depending on the context in which it is used: storing a data 
+*   value (just like the D-register), pointing at an address in 
+*   the instruction memory, or pointing at an address in the data memory.
+*
+*   If reset==0: the CPU uses this information (the jump bits and the ALU control bits)
+                 as follows:
+                 If there should be a jump, the PC is set to the value of A; 
+                 else, PC is set to PC+1 
+                 The updated PC value is emitted by pc.
+    If reset==1:the PC is set to 0. pc emits 0.(restarting the current program)
+*                       
+*                        _____
+*           inM(16)_____|     |____outM(16)
+*                       | CPU |____writeM(1)
+*  instruction (16)_____|     |____addressM(15)
+*                       |     |____pc(15)
+*         reset(1) _____|_____|              
+*
+* inM is from Data memory and Instruction is from instruction memory
+* outM,writeM and addressM point towards data memory while pc to instruction memory 
+************************************/
+CHIP HackCPU
+{
+    IN inM[16],reset,ins[16];
+    OUT data[16],writeM,adds[15],pc[15];
+
+    PARTS:
+    // writeM
+    And(a=ins[15], b=ins[3], out=writeM);
+    Not(in=ins[15], out=notI15);
+    // Mux1
+    Mux16(a=ALUout, b=ins, s=notI15, out=outMux1);
+    // loadA = I15' + I15.I5
+    And(a=ins[15], b=ins[5], out=I15I5);
+    Or(a=I15I5, b=notI15, out=loadA);
+    // ARegister
+    ARegister(in=outMux1, load=loadA, out=outA);
+    // s = I15.I12
+    And(a=ins[15], b=ins[12], out=I15I12);
+    // Mux2
+    Mux16(a=outA, b=inM, s=I15I12, out=outMux2);
+    // ALU
+    HackALU(x= outD,y=outMux2,zx=ins[11],nx=ins[10],zy=ins[9],ny=ins[8],f=ins[7],n0=ins[6],out=ALUout,zr=zr,ng=ng);
+    // I15.I4
+    And(a=ins[15], b=ins[4], out=I15I4);
+    // DRegister
+    DRegister(in=ALUout, load=I15I4, out=outD);
+    // Jump
+    Jump(j1=ins[2], j2=ins[1], j3=ins[0], zr=zr, ng=ng, jump=j);
+    And(a=j, b=ins[15], out=jump);
+    // Program counter
+    PC(in=outA, load=jump, inc=true, reset=reset, out[0..14]=pc);
+    // data
+    And16(a=ALUout, b=true, out=data);
+    // Address
+    And16(a=outA, b=true, out[0..14]=adds);
+}

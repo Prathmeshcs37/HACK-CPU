@@ -1,0 +1,38 @@
+/********************************
+*
+*   CHIP:16 bit multiplexor. 
+*   
+    FUNCTION:
+    If s==1 then out=b else out=a.
+*   
+*   16 bit multiplexer is a device that 
+*   selects one of 16 analog or digital input 
+*   signals and forwards the selected input into a 
+*   single line, depending on the active select lines.
+*
+*******************************/
+CHIP Mux16
+{
+    IN a[16],b[16],s;
+    OUT out[16];
+
+    PARTS:
+
+    Mux(x0=a[0], x1=b[0], s=s, out=out[0]);
+    Mux(x0=a[1], x1=b[1], s=s, out=out[1]);
+    Mux(x0=a[2], x1=b[2], s=s, out=out[2]);
+    Mux(x0=a[3], x1=b[3], s=s, out=out[3]);
+    Mux(x0=a[4], x1=b[4], s=s, out=out[4]);
+    Mux(x0=a[5], x1=b[5], s=s, out=out[5]);
+    Mux(x0=a[6], x1=b[6], s=s, out=out[6]);
+    Mux(x0=a[7], x1=b[7], s=s, out=out[7]);
+    Mux(x0=a[8], x1=b[8], s=s, out=out[8]);
+    Mux(x0=a[9], x1=b[9], s=s, out=out[9]);
+    Mux(x0=a[10], x1=b[10], s=s, out=out[10]);
+    Mux(x0=a[11], x1=b[11], s=s, out=out[11]);
+    Mux(x0=a[12], x1=b[12], s=s, out=out[12]);
+    Mux(x0=a[13], x1=b[13], s=s, out=out[13]);
+    Mux(x0=a[14], x1=b[14], s=s, out=out[14]);
+    Mux(x0=a[15], x1=b[15], s=s, out=out[15]);
+    
+}
